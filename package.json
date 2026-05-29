@@ -1,0 +1,57 @@
+{
+	"name": "@gottheflag/nova",
+	"version": "0.1.0-beta.1",
+	"type": "module",
+	"license": "MIT",
+	"author": {
+		"name": "GTF",
+		"email": "dev@gottheflag.sa",
+		"url": "https://gottheflag.sa"
+	},
+	"description": "Theme state controller.",
+	"files": [
+		"dist"
+	],
+	"exports": {
+		".": {
+			"types": "./dist/core/index.d.ts",
+			"import": "./dist/core/index.js"
+		},
+		"./adapters": {
+			"types": "./dist/adapters/index.d.ts",
+			"import": "./dist/adapters/index.js"
+		}
+	},
+	"scripts": {
+		"dev": "concurrently -k -n TS,VITE -c blue,green \"tsc -p tsconfig.build.json --watch\" \"vite example\"",
+		"build": "tsup",
+		"typecheck": "tsc --noEmit",
+		"prepare": "pnpm run build"
+	},
+	"keywords": [
+		"theme",
+		"light",
+		"dark"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/gottheflag/nova"
+	},
+	"bugs": {
+		"url": "https://github.com/gottheflag/nova/issues"
+	},
+	"homepage": "https://github.com/gottheflag/nova#readme",
+	"devDependencies": {
+		"@swc/core": "^1.15.11",
+		"@types/node": "^25",
+		"concurrently": "^9.2.1",
+		"terser": "^5.46.0",
+		"tsup": "^8.5",
+		"tsx": "^4.21",
+		"typescript": "^5.9",
+		"vite": "^7.3.1"
+	}
+}

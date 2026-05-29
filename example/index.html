@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Theme controller</title>
+	<script>
+		!function(){"use strict";!function(l=document.documentElement,t){var e,n,u,i,a,o,r;try{let d=null!=(n=null==(e=null==t?void 0:t.storage)?void 0:e.key)?n:"theme",c=null!=(u=null==t?void 0:t.attribute)?u:"data-theme",m=null!=(i=null==t?void 0:t.system)?i:"system",s=null!=(a=null==t?void 0:t.light)?a:"light",h=null!=(o=null==t?void 0:t.dark)?o:"dark",v=null!=(r=null==t?void 0:t.initial)?r:h;if(l&&l.hasAttribute(c))return;let g=localStorage.getItem(d),f=null;g===m?f=null!=matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?h:s:g===s||g===h?f=g:!g&&v&&(f=v),f&&l.setAttribute(c,f)}catch(l){}}()}();
+	</script>
+	<style>
+		html {
+			transition: background-color 100ms;
+		}
+
+		[data-theme="dark"] {
+			background-color: #222;
+			color: #fcfcfc;
+		}
+
+		[data-theme="light"] {
+			background-color: #fcfcfc;
+			color: #222;
+		}
+
+		button,
+		select {
+			padding: 0.5rem;
+			padding-inline: 1rem;
+		}
+
+		.hoveriest {
+			width: 100px;
+			height: 100px;
+			padding: 0.5rem;
+			background-color: red;
+		}
+
+		.hoveriest>* {
+			pointer-events: none;
+			user-select: none;
+		}
+	</style>
+</head>
+
+<body>
+	<button type="button" value="theme:light">⚡ Light</button>
+	<button type="button" value="theme:dark">🌚 Dark</button>
+
+	<select>
+		<option value="theme:light">Light</option>
+		<option value="theme:system">System</option>
+		<option value="theme:dark">Dark</option>
+	</select>
+	<label>
+		<input type="radio" name="theme" value="theme:light">
+		<span>Light</span>
+	</label>
+	<label>
+		<input type="radio" name="theme" value="theme:dark">
+		<span>Dark</span>
+	</label>
+	<label>
+		<input type="radio" name="theme" value="theme:system">
+		<span>System</span>
+	</label>
+
+	<script type="module" src="./main.ts"></script>
+</body>
+
+</html>
