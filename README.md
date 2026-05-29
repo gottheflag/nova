@@ -1,5 +1,7 @@
 # Theme controller
 
+[![Socket Badge](https://badge.socket.dev/npm/package/@gottheflag/nova/0.1.0-beta.1)](https://badge.socket.dev/npm/package/@gottheflag/nova/0.1.0-beta.1)
+
 A controller for managing the theming for applications.
 
 ## Installation
