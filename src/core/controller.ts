@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2026 GTF
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { Adapter } from "./adapter.js";
 import { RawConfig, ResolvedConfig } from "./config.js";
 import { System } from "./system.js";

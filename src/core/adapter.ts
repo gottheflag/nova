@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2026 GTF
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import type { Controller } from "./controller.js";
 
 export interface Adapter<Options = undefined> {

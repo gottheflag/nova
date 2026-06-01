@@ -2,7 +2,7 @@
 	"name": "@gottheflag/nova",
 	"version": "0.1.0-beta.1",
 	"type": "module",
-	"license": "MIT",
+	"license": "Apache-2.0",
 	"author": {
 		"name": "GTF",
 		"email": "dev@gottheflag.sa",

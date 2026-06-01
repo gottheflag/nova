@@ -1,4 +1,9 @@
 /**
+ * Copyright (c) 2026 GTF
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
  * Effective theme name (e.g. `day`, `night`, `mint`).
  */
 export type Name = string;

@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2026 GTF
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { Controller } from "../core/controller.js";
 import type { Adapter } from "../core/adapter.js";
 import { State, type Name } from "../core/types.js";

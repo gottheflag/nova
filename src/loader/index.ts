@@ -1,4 +1,9 @@
 /**
+ * Copyright (c) 2026 GTF
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
  * Theme Loader (FOUC prevention).
  * 
  * Put this inline as a <script> in <head>, before CSS.
