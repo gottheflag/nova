@@ -1,6 +1,6 @@
 {
 	"name": "@gottheflag/nova",
-	"version": "0.1.0-beta.1",
+	"version": "0.1.0-beta.3",
 	"type": "module",
 	"license": "Apache-2.0",
 	"author": {
@@ -20,10 +20,14 @@
 		"./adapters": {
 			"types": "./dist/adapters/index.d.ts",
 			"import": "./dist/adapters/index.js"
+		},
+		"./storage": {
+			"types": "./dist/storage/index.d.ts",
+			"import": "./dist/storage/index.js"
 		}
 	},
 	"scripts": {
-		"dev": "concurrently -k -n TS,VITE -c blue,green \"tsc -p tsconfig.build.json --watch\" \"vite example\"",
+		"test": "concurrently -k -n TS,VITE -c blue,green \"tsc -p tsconfig.build.json --watch\" \"vite example\"",
 		"build": "tsup",
 		"typecheck": "tsc --noEmit",
 		"prepare": "pnpm run build"

@@ -3,55 +3,75 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Controller } from "../core/controller.js";
-import type { Adapter } from "../core/adapter.js";
-import { State, type Name } from "../core/types.js";
+import { defineAdapter } from "../core/adapter.js";
+import { State } from "../core/types.js";
+import { DEFAULT_PREFIX, parseValue } from "../core/utils.js";
 
-const PREFIX = "theme:";
+type Easing = "linear" | "ease" | "ease-in" | "ease-out" | "ease-in-out";
 
-function parseThemeName(btn: HTMLButtonElement): State {
-    const value = btn.value;
-    const name = value.slice(PREFIX.length) as State;
-
-    return name ? name : value as State;
+interface ButtonOptions {
+    prefix?: string;
+    animate?: {
+        enabled?: boolean;
+        duration?: number;
+        easing?: Easing;
+    }
 }
 
 /**
  * @example
- * <button value="<prefix>light">Light</button>
- * <button value="<prefix>dark">Dark</button>
+ * <button value="theme:light">Light</button>
+ * <button value="theme:dark">Dark</button>
  */
-export const Button: Adapter & {
-    registry: Map<Element, Name[]>;
-} = {
+export const Button = defineAdapter<HTMLButtonElement, ButtonOptions>({
     name: "button",
 
-    registry: new Map<Element, Name[]>(),
-
-    discover(ctl: Controller) {
-        const root = ctl.root;
-
-        root.querySelectorAll<HTMLButtonElement>(`button[value^="${PREFIX}"]`).forEach(btn => {
-            const detected: Name[] = [];
-
-            const theme = parseThemeName(btn);
-            if (theme) detected.push(theme);
-
-            this.registry.set(btn, detected);
-        });
+    defaults: {
+        prefix: DEFAULT_PREFIX,
+        animate: {
+            enabled: false,
+            duration: 600,
+            easing: "ease-in-out"
+        }
     },
 
-    bind(ctl: Controller) {
-        const root = ctl.root;
+    selector: (o) => `button[value^="${o.prefix ?? DEFAULT_PREFIX}"]`,
 
-        root.querySelectorAll<HTMLButtonElement>(`button[value^="${PREFIX}"]`).forEach(btn => {
-            const theme = parseThemeName(btn);
+    bind(ctl, el, { prefix = DEFAULT_PREFIX, animate }) {
+        el.addEventListener("click", async (event) => {
+            const theme = parseValue(el.value, prefix) as State;
 
-            btn.addEventListener("click", () => {
-                if (this.registry.get(btn)?.includes(theme)) {
-                    ctl.set(theme);
+            if (theme === ctl.state) return;
+
+            if (!animate?.enabled || !document.startViewTransition) {
+                ctl.set(theme);
+                return;
+            }
+
+            const { clientX: x, clientY: y } = event;
+
+            const radius = Math.hypot(
+                Math.max(x, innerWidth - x),
+                Math.max(y, innerHeight - y)
+            );
+
+            const transition = document.startViewTransition(() => ctl.set(theme));
+
+            await transition.ready;
+
+            document.documentElement.animate(
+                {
+                    clipPath: [
+                        `circle(0px at ${x}px ${y}px)`,
+                        `circle(${radius}px at ${x}px ${y}px)`
+                    ]
+                },
+                {
+                    duration: animate.duration ?? 500,
+                    easing: animate.easing ?? "ease-in-out",
+                    pseudoElement: "::view-transition-new(root)"
                 }
-            });
+            );
         });
     },
-};
+});

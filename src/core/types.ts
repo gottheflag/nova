@@ -15,3 +15,21 @@ export type Name = string;
  * - Effective themes are the resolved values (e.g. `<dark>`, `<light>`, `mint`).
  */
 export type State = "system" | "light" | "dark";
+
+/**
+ * Emitted when the theme state changes.
+ */
+export interface ChangeEvent {
+	from: State | null;
+	to: State;
+	theme: Name;
+}
+
+export interface ApplyEvent {
+	theme: Name;
+}
+
+export type NEvents = {
+	change: ChangeEvent;
+	apply: ApplyEvent;
+};

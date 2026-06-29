@@ -15,21 +15,22 @@
  * - If "<light>" or "<dark>": use that.
  */
 
-import { type RawConfig } from "../core/config.js";
+import { type ResolvedConfig } from "../core/config.js";
+import { LocalStorage } from "../storage/local.js";
 
-(function (root: Element=document.documentElement, cfg?: RawConfig) {
+(function (root: Element = document.documentElement, cfg: ResolvedConfig) {
     try {
-        const storageKey = cfg?.storage?.key ?? 'theme';
-        const attribute = cfg?.attribute ?? 'data-theme';
-        const system = cfg?.system ?? "system";
-        const light = cfg?.light ?? "light";
-        const dark = cfg?.dark ?? "dark";
-        const initial = cfg?.initial ?? dark;
+        const storage = cfg.storage;
+        const attribute = cfg.attribute;
+        const system = cfg.system;
+        const light = cfg.light;
+        const dark = cfg.dark;
+        const initial = cfg.initial;
 
         // Respect SSR/preset attribute to avoid flicker
         if (root && root.hasAttribute(attribute)) return;
 
-        let state = localStorage.getItem(storageKey);
+        let state = storage.get();
 
         let effective: string | null = null;
 
@@ -45,4 +46,13 @@ import { type RawConfig } from "../core/config.js";
 
         effective && root.setAttribute(attribute, effective);
     } catch { /* no-throw loader */ }
-})();
+})(document.documentElement, {
+    /** Just change the storage loader, everything is the same */
+    storage: new LocalStorage(),
+    attribute: 'data-theme',
+    system: "system",
+    light: "light",
+    dark: "dark",
+    initial: "dark",
+    observe: false
+});

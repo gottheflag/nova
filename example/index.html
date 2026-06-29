@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Theme controller</title>
 	<script>
-		!function(){"use strict";!function(l=document.documentElement,t){var e,n,u,i,a,o,r;try{let d=null!=(n=null==(e=null==t?void 0:t.storage)?void 0:e.key)?n:"theme",c=null!=(u=null==t?void 0:t.attribute)?u:"data-theme",m=null!=(i=null==t?void 0:t.system)?i:"system",s=null!=(a=null==t?void 0:t.light)?a:"light",h=null!=(o=null==t?void 0:t.dark)?o:"dark",v=null!=(r=null==t?void 0:t.initial)?r:h;if(l&&l.hasAttribute(c))return;let g=localStorage.getItem(d),f=null;g===m?f=null!=matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?h:s:g===s||g===h?f=g:!g&&v&&(f=v),f&&l.setAttribute(c,f)}catch(l){}}()}();
+		!function(){"use strict";var e=Object.defineProperty,t=(t,a,r)=>((t,a,r)=>a in t?e(t,a,{enumerable:!0,configurable:!0,writable:!0,value:r}):t[a]=r)(t,a+"",r),a=class{constructor(e={}){var a;t(this,"key"),this.key=null!=(a=e.key)?a:"theme"}get(){try{return localStorage.getItem(this.key)}catch(e){return null}}set(e){try{localStorage.setItem(this.key,e)}catch(e){console.warn("[LOCAL] Failed to write theme state.")}}remove(){try{localStorage.removeItem(this.key)}catch(e){}}};e(a,"name",{value:"LocalStorage",configurable:!0});var r=a;!function(e=document.documentElement,t){try{let a=t.storage,r=t.attribute,l=t.system,c=t.light,i=t.dark,n=t.initial;if(e&&e.hasAttribute(r))return;let o=a.get(),s=null;o===l?s=null!=matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches?i:c:o===c||o===i?s=o:!o&&n&&(s=n),s&&e.setAttribute(r,s)}catch(e){}}(document.documentElement,{storage:new r,attribute:"data-theme",system:"system",light:"light",dark:"dark",initial:"dark",observe:!1})}();
 	</script>
 	<style>
 		html {
@@ -29,16 +29,21 @@
 			padding-inline: 1rem;
 		}
 
-		.hoveriest {
-			width: 100px;
-			height: 100px;
-			padding: 0.5rem;
-			background-color: red;
+		/* Disable the default cross-fade */
+		::view-transition-old(root),
+		::view-transition-new(root) {
+			animation: none;
+			mix-blend-mode: normal;
 		}
 
-		.hoveriest>* {
-			pointer-events: none;
-			user-select: none;
+		/* Keep the old page underneath */
+		::view-transition-old(root) {
+			z-index: 0;
+		}
+
+		/* Animate the new page */
+		::view-transition-new(root) {
+			z-index: 1;
 		}
 	</style>
 </head>
