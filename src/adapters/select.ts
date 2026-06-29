@@ -1,7 +1,7 @@
-// /**
-//  * Copyright (c) 2026 GTF
-//  * SPDX-License-Identifier: Apache-2.0
-//  */
+/**
+ * Copyright (c) 2026 GTF
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 import { defineAdapter } from "../core/adapter.js";
 import { State } from "../core/types.js";
@@ -29,7 +29,7 @@ export const Select = defineAdapter<HTMLSelectElement, SelectOptions>({
     },
     
     selector: (o) => `select:has(option[value^="${o.prefix}"])`,
-    
+
     bind(ctl, el, { prefix = DEFAULT_PREFIX }) {
         el.addEventListener("change", () => {
             const option = el.options[ el.selectedIndex ];

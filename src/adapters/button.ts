@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Controller } from "../core/controller.js";
 import { defineAdapter } from "../core/adapter.js";
 import { State } from "../core/types.js";
 import { DEFAULT_PREFIX, parseValue } from "../core/utils.js";

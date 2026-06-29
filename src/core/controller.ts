@@ -174,11 +174,20 @@ export class Controller extends EventEmitter<NEvents> {
 		return this.config.storage.get();
 	}
 
+	/**
+	 * Destroy the controller.
+	 * 
+	 * @description
+	 * This method disconnects the observer, stops the system listener.
+	 */
 	destroy(): void {
 		this._observer?.disconnect();
 		this.system.stop();
 	}
 
+	/**
+	 * Sync all adapters.
+	 */
 	private syncAdapters(): void {
 		for (const { def, options, selector } of this._adapters) {
 			for (const el of this.root.querySelectorAll(selector)) {
@@ -230,6 +239,14 @@ export class Controller extends EventEmitter<NEvents> {
 		this.config.storage.set(theme);
 	}
 
+	/**
+	 * Start the DOM elements observer.
+	 * 
+	 * @description
+	 * This method starts a MutationObserver that watches for changes to
+	 * the DOM elements that are registered as adapters. When a change
+	 * is detected, the controller will bind the element to the adapter.
+	 */
 	private startObserver(): void {
 		this._observer = new MutationObserver((mutations) => {
 			for (const mu of mutations) {
@@ -244,6 +261,15 @@ export class Controller extends EventEmitter<NEvents> {
 		this._observer.observe(this.root, { childList: true, subtree: true });
 	}
 
+	/**
+	 * Bind a single DOM element to an adapter.
+	 * 
+	 * @description
+	 * This method checks if the element matches the adapter's selector.
+	 * If it does, the adapter's `bind` method is called with the element
+	 * and the adapter's options. If the adapter has a `sync` method, it
+	 * is also called with the element and the adapter's options.
+	 */
 	private bindNode(node: Element): void {
 		for (const { def, options, selector } of this._adapters) {
 			if (node.matches(selector)) {

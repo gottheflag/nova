@@ -31,6 +31,17 @@ export function resolveStateOf(state: State, system: System, config: ResolvedCon
 	return typeof state === "string" ? state : null;
 }
 
+/**
+ * Resolve a root element from a given value.
+ * 
+ * @description
+ * This function takes a root value and returns the corresponding
+ * HTMLElement. If the value is already an HTMLElement, it is returned
+ * directly. If the value is a Document, it returns the documentElement.
+ * If the value is a ShadowRoot, it returns the host element.
+ * 
+ * @param root Root value
+ */
 export function resolveRoot(root: unknown): HTMLElement {
 	if (root instanceof HTMLElement) {
 		return root
@@ -43,6 +54,17 @@ export function resolveRoot(root: unknown): HTMLElement {
 	return document.documentElement;
 }
 
+/**
+ * Parse a value with a prefix.
+ * 
+ * @description
+ * This function takes a value and a prefix. If the value starts with
+ * the prefix, it is sliced from the beginning. Otherwise, the value is
+ * returned as-is.
+ * 
+ * @param value Value to parse
+ * @param prefix Prefix to check
+ */
 export function parseValue(value: string, prefix: string): string {
 	return value.startsWith(prefix)
 		? value.slice(prefix.length)
