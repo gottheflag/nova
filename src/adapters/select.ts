@@ -1,24 +1,15 @@
-/**
- * Copyright (c) 2026 GTF
- * SPDX-License-Identifier: Apache-2.0
- */
+// /**
+//  * Copyright (c) 2026 GTF
+//  * SPDX-License-Identifier: Apache-2.0
+//  */
 
-import type { Adapter } from "../core/adapter.js";
-import { Controller } from "../core/controller.js";
-import { State, type Name } from "../core/types.js";
+import { defineAdapter } from "../core/adapter.js";
+import { State } from "../core/types.js";
+import { DEFAULT_PREFIX, parseValue } from "../core/utils.js";
 
-const PREFIX = "theme:";
-
-function parseThemeName(btn: HTMLOptionElement, prefix: string): State {
-    const value = btn.value;
-    const name = value.slice(prefix.length) as State;
-
-    return name ? name : value as State;
-}
-
-interface Options {
+interface SelectOptions {
     prefix?: string;
-};
+}
 
 /**
  * @example
@@ -30,56 +21,31 @@ interface Options {
  * </select>
  * ```
  */
-export const Select: Adapter<Options> & {
-    registry: Map<Element, Name[]>;
-    prefix?: string;
-} = {
+export const Select = defineAdapter<HTMLSelectElement, SelectOptions>({
     name: "select",
 
-    registry: new Map<Element, Name[]>(),
-
-    setup(_ctl: Controller, options) {
-        this.prefix = options?.prefix ?? PREFIX;
+    defaults: {
+        prefix: DEFAULT_PREFIX,
     },
+    
+    selector: (o) => `select:has(option[value^="${o.prefix}"])`,
+    
+    bind(ctl, el, { prefix = DEFAULT_PREFIX }) {
+        el.addEventListener("change", () => {
+            const option = el.options[ el.selectedIndex ];
+            const theme = parseValue(option.value, prefix) as State;
 
-    discover(ctl: Controller) {
-        const root = ctl.root;
+            if (theme === ctl.state) return;
 
-        root.querySelectorAll<HTMLSelectElement>(`select:has(option[value^="${this.prefix}"])`).forEach(sel => {
-            const detected: Name[] = [];
-
-            Array.from(sel.options).forEach(option => {
-                const theme = parseThemeName(option, this.prefix!);
-                if (theme) detected.push(theme);
-            });
-
-            this.registry.set(sel, detected);
+            ctl.set(theme);
         });
     },
 
-    bind(ctl: Controller) {
-        const root = ctl.root;
-
-        root.querySelectorAll<HTMLSelectElement>(`select:has(option[value^="${this.prefix}"])`).forEach(sel => {
-            sel.addEventListener("change", e => {
-                const target = e.currentTarget as HTMLSelectElement;
-                const option = target.options[ target.selectedIndex ];
-
-                const theme = parseThemeName(option as HTMLOptionElement, this.prefix!);
-                if (theme) ctl.set(theme);
-            });
-        });
-    },
-
-    sync(ctl: Controller) {
-        const root = ctl.root;
+    sync(ctl, el, { prefix = DEFAULT_PREFIX }) {
         const active = ctl.active();
 
-        root.querySelectorAll<HTMLSelectElement>(`select:has(option[value^="${this.prefix}"])`).forEach(sel => {
-            Array.from(sel.options).forEach(option => {
-                const theme = parseThemeName(option, this.prefix!);
-                option.selected = theme === active;
-            });
-        });
+        for (const option of el.options) {
+            option.selected = parseValue(option.value, prefix) === active;
+        }
     }
-};
+});

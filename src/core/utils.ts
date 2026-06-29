@@ -7,6 +7,8 @@ import { ResolvedConfig } from "./config.js";
 import { System } from "./system.js";
 import { State, type Name } from "./types.js";
 
+export const DEFAULT_PREFIX = "theme:";
+
 /**
  * Resolve a theme state to an effective theme name.
  * 
@@ -39,4 +41,10 @@ export function resolveRoot(root: unknown): HTMLElement {
 	};
 
 	return document.documentElement;
+}
+
+export function parseValue(value: string, prefix: string): string {
+	return value.startsWith(prefix)
+		? value.slice(prefix.length)
+		: value;
 }

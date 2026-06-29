@@ -5,58 +5,49 @@
 
 import type { Controller } from "./controller.js";
 
-export interface Adapter<Options = undefined> {
+export interface AdapterDefinition<
+	E extends Element,
+	O = void
+> {
 	name: string;
 
-	/**
-	 * Setup the adapter.
-	 * Used to initiate any one-time setup.
-	 * 
-	 * ---
-	 * @remarks
-	 * Called once, when the controller is instantiated.
-	 * 
-	 * ---
-	 * @param ctl Controller instance
-	 * @param options Adapter options
-	 */
-	setup?(ctl: Controller, options: Options): void;
-	
-	/**
-	 * Discover themes that are available to this adapter. \
-	 * Used to validate, or for example do a one-time setup.
-	 * 
-	 * ---
-	 * @remarks
-	 * Called once, when the controller is instantiated.
-	 * 
-	 * ---
-	 * @param ctl the controller instance
-	 * @returns a list of themes that are available to this adapter
-	 */
-	discover?(ctl: Controller): void;
+	/** Default options — merged with options passed to `ctl.use()`. */
+	defaults?: Partial<O>;
+
+	/** CSS selector string, or a function that returns one given resolved options. */
+	selector: string | ((options: O) => string);
 
 	/**
-	 * Define the theme selection mechanism.
-	 * 
-	 * ---
-	 * @remarks
-	 * Called every time the controller is instantiated.
-	 * 
-	 * ---
-	 * @param ctl the controller instance
+	 * Attach event listeners to a single element.
+	 * Called once per element — at `use()` time, or when a new element is observed.
 	 */
-	bind?(ctl: Controller): void;
+	bind?(ctl: Controller, element: E, options: O): void;
 
 	/**
-	 * Sync theme adapter state with the controller.
-	 * 
-	 * ---
-	 * @remarks
-	 * Called every time the controller is instantiated.
-	 * 
-	 * ---
-	 * @param ctl the controller instance
+	 * Sync element UI state with the controller's current theme.
+	 * Called after every `ctl.set()` and on initial `use()`.
 	 */
-	sync?(ctl: Controller): void;
+	sync?(ctl: Controller, element: E, options: O): void;
+}
+
+/**
+ * Type helper for defining adapters with full inference.
+ * Zero runtime cost — returns the definition unchanged.
+ * 
+ * @example
+ * export const MyAdapter = defineAdapter<HTMLButtonElement, MyOptions>({
+ *   name: "my-adapter",
+ *   defaults: { prefix: "theme:" },
+ *   selector: (o) => `button[value="${o.prefix}"]`,
+ *   bind(ctl, el, options) { ... },
+ *   sync(ctl, el, options) { ... },
+ * });
+ */
+export function defineAdapter<
+	E extends Element,
+	O = void
+>(
+	definition: AdapterDefinition<E, O>
+): AdapterDefinition<E, O> {
+	return definition;
 }

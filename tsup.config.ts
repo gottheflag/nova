@@ -4,7 +4,8 @@ export default defineConfig([
 	{
 		entry: [
 			"src/core/index.ts",
-			"src/adapters/index.ts"
+			"src/adapters/index.ts",
+			"src/storage/index.ts",
 		],
 		format: [ "esm" ],
 		target: "es2022",
