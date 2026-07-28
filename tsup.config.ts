@@ -9,7 +9,7 @@ export default defineConfig([
 		],
 		format: [ "esm" ],
 		target: "es2022",
-		splitting: true,
+		splitting: false,
 		bundle: true,
 		treeshake: true,
 		minify: false,
