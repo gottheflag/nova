@@ -48,3 +48,7 @@ ctl.on("apply", ({ theme }) => {
 	console.log("theme applied", theme);
 });
 ```
+
+## License
+
+[Apache-2.0](LICENSE)
